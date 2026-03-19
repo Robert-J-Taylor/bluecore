@@ -248,7 +248,7 @@ function ServiceCard({
 
 export function ServicesSection() {
   const [audience, setAudience] = useState<Audience>("enterprise");
-  const isDarkMode = audience === "startup";
+  const isDarkMode = audience === "enterprise";
 
   const services =
     audience === "enterprise" ? ENTERPRISE_SERVICES : STARTUP_SERVICES;
