@@ -153,20 +153,8 @@ export function TeamSection() {
           clipPath: "polygon(0 0, 100% 0, 0 100%)",
         }}
       />
-      {/* White shapes — bottom right */}
-      <div
-        aria-hidden
-        className="absolute bottom-8 right-8 flex items-end gap-0"
-      >
-        <div
-          className="h-6 w-6 shrink-0 bg-white"
-          style={{ clipPath: "polygon(50% 0%, 100% 100%, 0% 100%)" }}
-        />
-        <div className="h-6 w-6 shrink-0 rounded-full bg-white" />
-        <div className="h-6 w-6 shrink-0 bg-white" />
-      </div>
-      <Container className="relative">
-        <div className="flex flex-col gap-8 md:flex-row md:items-center md:justify-between md:gap-12">
+      <div className="relative">
+        <Container>
           <div>
             <Eyebrow className="mb-6 text-white/80">Who we are</Eyebrow>
             <h2 className="text-3xl font-medium leading-[1.18] tracking-[-0.025em] text-white md:text-4xl">
@@ -178,16 +166,30 @@ export function TeamSection() {
               design to production deployment. If you&apos;re an exceptional individual
               with a desire to shape the future of decentralized systems, hit us up.
             </p>
+            <Link href="#contact" className="mt-8 inline-block">
+              <Button variant="primary" size="sm">
+                Join our team
+              </Button>
+            </Link>
           </div>
-          <Link href="#contact" className="shrink-0">
-            <Button variant="primary" size="sm">
-              Join our team
-            </Button>
-          </Link>
+        </Container>
+        {/* Spacer — extends header area so shapes can sit at top of grid */}
+        <div className="h-12 md:h-16" />
+        {/* Decorative geometric motif — pinned to top of team grid, right side */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute bottom-6 right-12 flex items-end gap-4 md:bottom-8 md:right-16 md:gap-5"
+        >
+          <div className="h-10 w-10 shrink-0 rounded-full bg-white md:h-14 md:w-14" />
+          <div className="h-10 w-10 shrink-0 bg-white md:h-14 md:w-14" />
+          <div
+            className="h-10 w-10 shrink-0 bg-white md:h-14 md:w-14"
+            style={{ clipPath: "polygon(50% 0%, 0% 100%, 100% 100%)" }}
+          />
         </div>
-      </Container>
+      </div>
       <div
-        className="mt-12 grid w-full grid-cols-5 gap-0 p-0 m-0 md:mt-16"
+        className="grid w-full grid-cols-5 gap-0 p-0 m-0"
         style={{ gridTemplateRows: "auto auto" }}
       >
         {GRID_LAYOUT.flat().map((cell) =>
