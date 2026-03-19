@@ -124,6 +124,22 @@
   animation: stack-grid-in 0.32s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
 }
 
+/* CTA section — subtle entrance */
+@keyframes cta-card-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.cta-card-animate {
+  animation: cta-card-in 0.6s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+}
+
 @layer base {
   :root {
     --color-deep-navy: #081225;
