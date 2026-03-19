@@ -141,15 +141,9 @@ export function ThesisSection() {
       {/* ── WebGL Celestial Sphere background ────────────────────── */}
       <div className="pointer-events-none absolute inset-0 z-0">
         <CelestialSphere
-          hue={220}
-          speed={0.25}
-          zoom={1.8}
-          particleSize={2.5}
-          className="h-full w-full opacity-60"
+          speed={0.3}
+          className="h-full w-full"
         />
-        {/* Fade-to-navy vignette so text stays readable */}
-        <div className="absolute inset-0 bg-gradient-to-b from-navy/70 via-transparent to-navy/80" />
-        <div className="absolute inset-0 bg-gradient-to-r from-navy/50 via-transparent to-navy/50" />
       </div>
 
       {/* ── Traveling accent lines (left & right edges) ──────────── */}

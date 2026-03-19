@@ -1,173 +1,225 @@
 "use client";
 
-import React, { useRef, useEffect } from "react";
-import * as THREE from "three";
+import React, { useRef, useEffect, useCallback } from "react";
 
 interface CelestialSphereProps {
-  /** Base hue (0–360). Default 220 = Bluecore blue */
-  hue?: number;
   /** Animation speed multiplier */
   speed?: number;
-  /** Star brightness multiplier */
-  particleSize?: number;
-  /** Zoom level */
-  zoom?: number;
   className?: string;
 }
 
+/* ------------------------------------------------------------------ */
+/*  Geometric floating shapes — rounded rects, circles, triangles      */
+/*  Matches the Bluecore design language (Services, Hero shapes)       */
+/* ------------------------------------------------------------------ */
+
+interface Shape {
+  type: "rect" | "circle" | "triangle";
+  x: number;
+  y: number;
+  size: number;
+  aspect: number;
+  rotation: number;
+  rotationSpeed: number;
+  driftPhaseX: number;
+  driftPhaseY: number;
+  driftSpeedX: number;
+  driftSpeedY: number;
+  driftAmplitudeX: number;
+  driftAmplitudeY: number;
+  alpha: number;
+  color: string;
+  borderRadius: number;
+  parallaxFactor: number;
+}
+
+function createShapes(count: number): Shape[] {
+  const types: Shape["type"][] = ["rect", "rect", "rect", "circle", "triangle"];
+  const colors = [
+    [220, 235, 255], // pale-blue
+    [59, 130, 246],  // secondary-blue
+    [91, 127, 166],  // steel-blue
+    [248, 250, 252], // soft-white
+    [37, 99, 235],   // primary-blue
+  ];
+
+  return Array.from({ length: count }, () => {
+    const type = types[Math.floor(Math.random() * types.length)];
+    const [r, g, b] = colors[Math.floor(Math.random() * colors.length)];
+    const alpha = 0.03 + Math.random() * 0.06;
+    const size = 80 + Math.random() * 260;
+
+    return {
+      type,
+      x: Math.random(),
+      y: Math.random(),
+      size,
+      aspect: 0.6 + Math.random() * 0.4,
+      rotation: Math.random() * 360,
+      rotationSpeed: (Math.random() - 0.5) * 0.3, // degrees per second
+      driftPhaseX: Math.random() * Math.PI * 2,
+      driftPhaseY: Math.random() * Math.PI * 2,
+      driftSpeedX: 0.08 + Math.random() * 0.12,
+      driftSpeedY: 0.06 + Math.random() * 0.1,
+      driftAmplitudeX: 15 + Math.random() * 25,
+      driftAmplitudeY: 10 + Math.random() * 20,
+      alpha,
+      color: `rgba(${r}, ${g}, ${b}, ${alpha})`,
+      borderRadius: type === "rect" ? 8 + Math.random() * 16 : 0,
+      parallaxFactor: 0.3 + Math.random() * 0.7,
+    };
+  });
+}
+
 export const CelestialSphere: React.FC<CelestialSphereProps> = ({
-  hue = 220,
   speed = 0.3,
-  zoom = 1.5,
-  particleSize = 3.0,
   className = "",
 }) => {
-  const mountRef = useRef<HTMLDivElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const mouseRef = useRef({ x: 0.5, y: 0.5 });
+  const smoothMouseRef = useRef({ x: 0.5, y: 0.5 });
+
+  const onMouseMove = useCallback((e: MouseEvent) => {
+    mouseRef.current = {
+      x: e.clientX / window.innerWidth,
+      y: e.clientY / window.innerHeight,
+    };
+  }, []);
 
   useEffect(() => {
-    if (!mountRef.current) return;
-    const currentMount = mountRef.current;
-    let animationFrameId: number;
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
 
-    const vertexShader = `
-      varying vec2 vUv;
-      void main() {
-        vUv = uv;
-        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-      }
-    `;
+    let frameId: number;
+    let time = 0;
+    const shapes = createShapes(12);
 
-    const fragmentShader = `
-      precision highp float;
-      varying vec2 vUv;
-      uniform vec2 u_resolution;
-      uniform float u_time;
-      uniform vec2 u_mouse;
-      uniform float u_hue;
-      uniform float u_zoom;
-      uniform float u_particle_size;
-
-      vec3 hsl2rgb(vec3 c) {
-        vec3 rgb = clamp(abs(mod(c.x*6.0+vec3(0.0,4.0,2.0), 6.0)-3.0)-1.0, 0.0, 1.0);
-        return c.z * mix(vec3(1.0), rgb, c.y);
-      }
-
-      float random(vec2 st) {
-        return fract(sin(dot(st.xy, vec2(12.9898, 78.233))) * 43758.5453123);
-      }
-
-      float noise(vec2 st) {
-        vec2 i = floor(st);
-        vec2 f = fract(st);
-        float a = random(i);
-        float b = random(i + vec2(1.0, 0.0));
-        float c = random(i + vec2(0.0, 1.0));
-        float d = random(i + vec2(1.0, 1.0));
-        vec2 u = f * f * (3.0 - 2.0 * f);
-        return mix(a, b, u.x) + (c - a) * u.y * (1.0 - u.x) + (d - b) * u.y * u.x;
-      }
-
-      float fbm(vec2 st) {
-        float value = 0.0;
-        float amplitude = 0.5;
-        for (int i = 0; i < 6; i++) {
-          value += amplitude * noise(st);
-          st *= 2.0;
-          amplitude *= 0.5;
-        }
-        return value;
-      }
-
-      void main() {
-        vec2 uv = (gl_FragCoord.xy - 0.5 * u_resolution.xy) / min(u_resolution.y, u_resolution.x);
-        uv *= u_zoom;
-
-        vec2 mouse_normalized = u_mouse / u_resolution;
-        uv += (mouse_normalized - 0.5) * 0.8;
-
-        float f = fbm(uv + vec2(u_time * 0.1, u_time * 0.05));
-        float t = fbm(uv + f + vec2(u_time * 0.05, u_time * 0.02));
-
-        float nebula = pow(t, 2.0);
-        vec3 color = hsl2rgb(vec3(u_hue / 360.0 + nebula * 0.2, 0.7, 0.5));
-        color *= nebula * 2.5;
-
-        float star_val = random(vUv * 500.0);
-        if (star_val > 0.998) {
-          float star_brightness = (star_val - 0.998) / 0.002;
-          color += vec3(star_brightness * u_particle_size);
-        }
-
-        gl_FragColor = vec4(color, 1.0);
-      }
-    `;
-
-    // --- Scene setup ---
-    const scene = new THREE.Scene();
-    const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
-    const renderer = new THREE.WebGLRenderer({ antialias: false, alpha: false });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
-    currentMount.appendChild(renderer.domElement);
-
-    const material = new THREE.ShaderMaterial({
-      vertexShader,
-      fragmentShader,
-      uniforms: {
-        u_time: { value: 0.0 },
-        u_resolution: { value: new THREE.Vector2() },
-        u_mouse: { value: new THREE.Vector2() },
-        u_hue: { value: hue },
-        u_zoom: { value: zoom },
-        u_particle_size: { value: particleSize },
-      },
-    });
-
-    const geometry = new THREE.PlaneGeometry(2, 2);
-    const mesh = new THREE.Mesh(geometry, material);
-    scene.add(mesh);
-
-    // --- Resize ---
     const resize = () => {
-      const { clientWidth, clientHeight } = currentMount;
-      renderer.setSize(clientWidth, clientHeight);
-      material.uniforms.u_resolution.value.set(clientWidth, clientHeight);
+      const dpr = Math.min(window.devicePixelRatio, 2);
+      const parent = canvas.parentElement;
+      if (!parent) return;
+      const w = parent.clientWidth;
+      const h = parent.clientHeight;
+      canvas.width = w * dpr;
+      canvas.height = h * dpr;
+      canvas.style.width = w + "px";
+      canvas.style.height = h + "px";
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     };
 
-    // --- Mouse ---
-    const onMouseMove = (event: MouseEvent) => {
-      const rect = currentMount.getBoundingClientRect();
-      material.uniforms.u_mouse.value.set(
-        event.clientX - rect.left,
-        currentMount.clientHeight - (event.clientY - rect.top)
-      );
+    const drawRoundedRect = (
+      cx: number,
+      cy: number,
+      w: number,
+      h: number,
+      r: number,
+      angle: number,
+      fill: string
+    ) => {
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.rotate((angle * Math.PI) / 180);
+      ctx.beginPath();
+      ctx.roundRect(-w / 2, -h / 2, w, h, r);
+      ctx.fillStyle = fill;
+      ctx.fill();
+      ctx.restore();
     };
+
+    const drawCircle = (cx: number, cy: number, radius: number, fill: string) => {
+      ctx.beginPath();
+      ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+      ctx.fillStyle = fill;
+      ctx.fill();
+    };
+
+    const drawTriangle = (
+      cx: number,
+      cy: number,
+      size: number,
+      angle: number,
+      fill: string
+    ) => {
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.rotate((angle * Math.PI) / 180);
+      ctx.beginPath();
+      ctx.moveTo(0, -size / 2);
+      ctx.lineTo(size / 2, size / 2);
+      ctx.lineTo(-size / 2, size / 2);
+      ctx.closePath();
+      ctx.fillStyle = fill;
+      ctx.fill();
+      ctx.restore();
+    };
+
+    const draw = () => {
+      const w = canvas.clientWidth;
+      const h = canvas.clientHeight;
+      if (w === 0 || h === 0) {
+        frameId = requestAnimationFrame(draw);
+        return;
+      }
+
+      time += 0.016 * speed;
+
+      // Smooth mouse interpolation (lerp) to prevent jerky parallax
+      const lerp = 0.03;
+      smoothMouseRef.current.x += (mouseRef.current.x - smoothMouseRef.current.x) * lerp;
+      smoothMouseRef.current.y += (mouseRef.current.y - smoothMouseRef.current.y) * lerp;
+
+      ctx.clearRect(0, 0, w, h);
+
+      const mx = (smoothMouseRef.current.x - 0.5) * 20;
+      const my = (smoothMouseRef.current.y - 0.5) * 20;
+
+      for (const shape of shapes) {
+        const sx =
+          shape.x * w +
+          Math.sin(time * shape.driftSpeedX + shape.driftPhaseX) * shape.driftAmplitudeX +
+          mx * shape.parallaxFactor;
+        const sy =
+          shape.y * h +
+          Math.cos(time * shape.driftSpeedY + shape.driftPhaseY) * shape.driftAmplitudeY +
+          my * shape.parallaxFactor;
+        const rot = shape.rotation + time * shape.rotationSpeed;
+
+        if (shape.type === "rect") {
+          drawRoundedRect(
+            sx,
+            sy,
+            shape.size,
+            shape.size * shape.aspect,
+            shape.borderRadius,
+            rot,
+            shape.color
+          );
+        } else if (shape.type === "circle") {
+          drawCircle(sx, sy, shape.size / 2, shape.color);
+        } else {
+          drawTriangle(sx, sy, shape.size, rot, shape.color);
+        }
+      }
+
+      frameId = requestAnimationFrame(draw);
+    };
+
+    resize();
+    draw();
 
     window.addEventListener("resize", resize);
     window.addEventListener("mousemove", onMouseMove);
-    resize();
-
-    // --- Animate ---
-    const animate = () => {
-      material.uniforms.u_time.value += 0.005 * speed;
-      renderer.render(scene, camera);
-      animationFrameId = requestAnimationFrame(animate);
-    };
-    animate();
 
     return () => {
+      cancelAnimationFrame(frameId);
       window.removeEventListener("resize", resize);
       window.removeEventListener("mousemove", onMouseMove);
-      cancelAnimationFrame(animationFrameId);
-      if (currentMount && renderer.domElement.parentNode === currentMount) {
-        currentMount.removeChild(renderer.domElement);
-      }
-      geometry.dispose();
-      material.dispose();
-      renderer.dispose();
     };
-  }, [hue, speed, zoom, particleSize]);
+  }, [speed, onMouseMove]);
 
-  return <div ref={mountRef} className={className} />;
+  return <canvas ref={canvasRef} className={className} />;
 };
 
 export default CelestialSphere;
