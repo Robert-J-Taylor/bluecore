@@ -6,6 +6,7 @@ import BluecoreHero from "@/components/BluecoreHero";
 import { PartnersSection } from "@/components/PartnersSection";
 import { ServicesSection } from "@/components/ServicesSection";
 import { StackSection } from "@/components/StackSection";
+import { ThesisSection } from "@/components/ThesisSection";
 import { CtaSection } from "@/components/CtaSection";
 import { TeamSection } from "@/components/TeamSection";
 import { ResearchSection } from "@/components/ResearchSection";
@@ -43,6 +44,7 @@ export function HomePageClient() {
         />
         <PartnersSection />
         <ServicesSection />
+        <ThesisSection />
         <StackSection />
         <TeamSection />
         <ResearchSection />
