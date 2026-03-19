@@ -135,6 +135,10 @@
     --color-text-dark: #0F172A;
     --color-gray: #7C8CA3;
     --color-soft-white: #F8FAFC;
+    /* Font families */
+    --font-display: var(--font-syne);
+    --font-body: var(--font-outfit);
+    --font-mono: var(--font-jetbrains-mono);
   }
 
   html {
@@ -142,7 +146,10 @@
   }
 
   body {
-    @apply m-0 p-0 font-sans text-text-dark;
+    font-family: var(--font-outfit), system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    @apply m-0 p-0 text-text-dark;
     background: linear-gradient(to bottom, #2563EB 0%, #2563EB 120px, #F8FAFC 120px);
   }
 }
