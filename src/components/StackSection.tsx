@@ -36,39 +36,224 @@ const STACK_ITEMS: { name: string; category: Category; iconSlug: string }[] = [
 
 const ICON_COLOR = "5B7FA6";
 
-// Bluecore palette: tonal progression navy → primary → secondary → steel → pale
-const CIRCLE_COLORS: Record<Category, { bg: string; border: string; ring: string; textLight: boolean }> = {
-  all: {
-    bg: "rgb(37, 99, 235)",
-    border: "rgba(37, 99, 235, 0.95)",
-    ring: "rgba(37, 99, 235, 0.35)",
-    textLight: true,
-  },
-  frontend: {
-    bg: "rgb(59, 130, 246)",
-    border: "rgba(59, 130, 246, 0.9)",
-    ring: "rgba(59, 130, 246, 0.3)",
-    textLight: true,
-  },
-  backend: {
-    bg: "rgb(91, 127, 166)",
-    border: "rgba(91, 127, 166, 0.85)",
-    ring: "rgba(91, 127, 166, 0.25)",
-    textLight: true,
-  },
-  mobile: {
-    bg: "rgb(220, 235, 255)",
-    border: "rgba(91, 127, 166, 0.45)",
-    ring: "rgba(91, 127, 166, 0.18)",
-    textLight: false,
-  },
-  devops: {
-    bg: "rgb(15, 30, 58)",
-    border: "rgba(15, 30, 58, 0.98)",
-    ring: "rgba(37, 99, 235, 0.2)",
-    textLight: true,
-  },
+const CATEGORY_COLORS: Record<Category, { color: string; colorLight: string }> = {
+  all: { color: "rgb(37, 99, 235)", colorLight: "rgba(37, 99, 235, 0.08)" },
+  frontend: { color: "rgb(59, 130, 246)", colorLight: "rgba(59, 130, 246, 0.08)" },
+  backend: { color: "rgb(91, 127, 166)", colorLight: "rgba(91, 127, 166, 0.08)" },
+  mobile: { color: "rgb(107, 148, 194)", colorLight: "rgba(107, 148, 194, 0.08)" },
+  devops: { color: "rgb(15, 30, 58)", colorLight: "rgba(15, 30, 58, 0.06)" },
 };
+
+/* ── All: 2x2 dashboard grid ── */
+function AllShape({ isActive }: { isActive: boolean }) {
+  const c = CATEGORY_COLORS.all;
+  const border = isActive ? c.color : "rgba(148, 163, 184, 0.25)";
+  const bg = isActive ? c.colorLight : "white";
+  const tileBg = isActive ? "rgba(37, 99, 235, 0.12)" : "rgba(148, 163, 184, 0.08)";
+  return (
+    <div
+      className="flex h-[120px] w-full flex-col overflow-hidden rounded-xl border-[1.5px] transition-all duration-200"
+      style={{ borderColor: border, backgroundColor: bg }}
+    >
+      <div className="flex h-6 items-center gap-1 border-b px-2.5" style={{ borderColor: border }}>
+        <div className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: isActive ? c.color : "rgba(148,163,184,0.4)" }} />
+        <div className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: isActive ? c.color : "rgba(148,163,184,0.3)" }} />
+        <div className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: isActive ? c.color : "rgba(148,163,184,0.2)" }} />
+      </div>
+      <div className="grid flex-1 grid-cols-2 grid-rows-2 gap-1.5 p-2.5">
+        {[0, 1, 2, 3].map((i) => (
+          <div key={i} className="rounded-md" style={{ backgroundColor: tileBg }} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ── Frontend: browser window ── */
+function BrowserShape({ isActive }: { isActive: boolean }) {
+  const c = CATEGORY_COLORS.frontend;
+  const border = isActive ? c.color : "rgba(148, 163, 184, 0.25)";
+  const bg = isActive ? c.colorLight : "white";
+  return (
+    <div
+      className="flex h-[120px] w-full flex-col overflow-hidden rounded-xl border-[1.5px] transition-all duration-200"
+      style={{ borderColor: border, backgroundColor: bg }}
+    >
+      {/* Title bar */}
+      <div className="flex h-6 items-center gap-1 border-b px-2.5" style={{ borderColor: border }}>
+        <div className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: isActive ? "#EF4444" : "rgba(148,163,184,0.4)" }} />
+        <div className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: isActive ? "#F59E0B" : "rgba(148,163,184,0.3)" }} />
+        <div className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: isActive ? "#22C55E" : "rgba(148,163,184,0.2)" }} />
+      </div>
+      {/* Address bar */}
+      <div className="flex h-5 items-center px-2.5" style={{ borderBottom: `1px solid ${border}` }}>
+        <div
+          className="h-2 w-3/4 rounded-sm"
+          style={{ backgroundColor: isActive ? "rgba(59,130,246,0.15)" : "rgba(148,163,184,0.1)" }}
+        />
+      </div>
+      {/* Content area */}
+      <div className="flex flex-1 flex-col gap-1.5 p-2.5">
+        <div className="h-2 w-full rounded-sm" style={{ backgroundColor: isActive ? "rgba(59,130,246,0.12)" : "rgba(148,163,184,0.08)" }} />
+        <div className="h-2 w-4/5 rounded-sm" style={{ backgroundColor: isActive ? "rgba(59,130,246,0.09)" : "rgba(148,163,184,0.06)" }} />
+        <div className="h-2 w-3/5 rounded-sm" style={{ backgroundColor: isActive ? "rgba(59,130,246,0.06)" : "rgba(148,163,184,0.04)" }} />
+      </div>
+    </div>
+  );
+}
+
+/* ── Backend: terminal ── */
+function TerminalShape({ isActive }: { isActive: boolean }) {
+  const c = CATEGORY_COLORS.backend;
+  const border = isActive ? c.color : "rgba(148, 163, 184, 0.25)";
+  const headerBg = isActive ? c.color : "rgba(148, 163, 184, 0.12)";
+  const bodyBg = isActive ? "rgb(20, 30, 42)" : "rgba(15, 23, 42, 0.04)";
+  const lineBright = isActive ? "rgba(91, 200, 166, 0.7)" : "rgba(148,163,184,0.2)";
+  const lineDim = isActive ? "rgba(91, 200, 166, 0.35)" : "rgba(148,163,184,0.12)";
+  return (
+    <div
+      className="flex h-[120px] w-full flex-col overflow-hidden rounded-xl border-[1.5px] transition-all duration-200"
+      style={{ borderColor: border }}
+    >
+      {/* Dark header */}
+      <div className="flex h-6 items-center gap-1 px-2.5" style={{ backgroundColor: headerBg }}>
+        <div className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: isActive ? "rgba(255,255,255,0.5)" : "rgba(148,163,184,0.4)" }} />
+        <div className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: isActive ? "rgba(255,255,255,0.35)" : "rgba(148,163,184,0.3)" }} />
+        <div className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: isActive ? "rgba(255,255,255,0.2)" : "rgba(148,163,184,0.2)" }} />
+      </div>
+      {/* Terminal body */}
+      <div className="flex flex-1 flex-col gap-1.5 p-2.5" style={{ backgroundColor: bodyBg }}>
+        <div className="flex items-center gap-1.5">
+          <div className="h-1.5 w-1.5" style={{ backgroundColor: lineBright }} />
+          <div className="h-1.5 w-3/4 rounded-sm" style={{ backgroundColor: lineBright }} />
+        </div>
+        <div className="flex items-center gap-1.5">
+          <div className="h-1.5 w-1.5" style={{ backgroundColor: lineDim }} />
+          <div className="h-1.5 w-1/2 rounded-sm" style={{ backgroundColor: lineDim }} />
+        </div>
+        <div className="flex items-center gap-1.5">
+          <div className="h-1.5 w-1.5" style={{ backgroundColor: lineDim }} />
+          <div className="h-1.5 w-2/3 rounded-sm" style={{ backgroundColor: lineDim }} />
+        </div>
+        {/* Cursor blink */}
+        <div className="flex items-center gap-1.5">
+          <div className="h-1.5 w-1.5" style={{ backgroundColor: lineBright }} />
+          <div className="h-3 w-1.5 rounded-sm" style={{ backgroundColor: lineBright, opacity: isActive ? 1 : 0.4 }} />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ── Mobile: phone ── */
+function PhoneShape({ isActive }: { isActive: boolean }) {
+  const c = CATEGORY_COLORS.mobile;
+  const border = isActive ? c.color : "rgba(148, 163, 184, 0.25)";
+  const bg = isActive ? c.colorLight : "white";
+  const barColor = isActive ? "rgba(107,148,194,0.2)" : "rgba(148,163,184,0.1)";
+  return (
+    <div className="flex h-[120px] w-full items-center justify-center" style={{ backgroundColor: "transparent" }}>
+      <div
+        className="flex h-[110px] w-[62px] flex-col overflow-hidden rounded-2xl border-[2px] transition-all duration-200"
+        style={{ borderColor: border, backgroundColor: bg }}
+      >
+        {/* Notch */}
+        <div className="mx-auto mt-1.5 h-1 w-5 rounded-full" style={{ backgroundColor: isActive ? c.color : "rgba(148,163,184,0.25)" }} />
+        {/* Screen content */}
+        <div className="flex flex-1 flex-col gap-1.5 px-2 pt-2.5">
+          <div className="h-1.5 w-full rounded-sm" style={{ backgroundColor: barColor }} />
+          <div className="h-1.5 w-4/5 rounded-sm" style={{ backgroundColor: barColor }} />
+          <div className="h-1.5 w-3/5 rounded-sm" style={{ backgroundColor: barColor }} />
+          <div className="mt-auto mb-1 h-4 w-full rounded-md" style={{ backgroundColor: isActive ? "rgba(107,148,194,0.18)" : "rgba(148,163,184,0.06)" }} />
+        </div>
+        {/* Home indicator */}
+        <div className="mx-auto mb-1.5 h-0.5 w-5 rounded-full" style={{ backgroundColor: isActive ? c.color : "rgba(148,163,184,0.2)" }} />
+      </div>
+    </div>
+  );
+}
+
+/* ── DevOps: cloud with nodes ── */
+function CloudShape({ isActive }: { isActive: boolean }) {
+  const c = CATEGORY_COLORS.devops;
+  const stroke = isActive ? c.color : "rgba(148, 163, 184, 0.4)";
+  const fill = isActive ? c.colorLight : "rgba(148, 163, 184, 0.04)";
+  const nodeFill = isActive ? c.color : "rgba(148, 163, 184, 0.3)";
+  const lineStroke = isActive ? "rgba(15, 30, 58, 0.3)" : "rgba(148, 163, 184, 0.15)";
+  return (
+    <div className="flex h-[120px] w-full items-center justify-center">
+      <svg width="120" height="90" viewBox="0 0 120 90" fill="none">
+        {/* Cloud shape */}
+        <path
+          d="M30 65 C10 65 8 48 22 42 C18 25 38 15 52 22 C58 10 82 10 88 22 C102 18 112 30 108 45 C118 50 115 65 100 65 Z"
+          stroke={stroke}
+          strokeWidth="1.5"
+          fill={fill}
+        />
+        {/* Connection lines */}
+        <line x1="45" y1="45" x2="60" y2="38" stroke={lineStroke} strokeWidth="1" />
+        <line x1="60" y1="38" x2="78" y2="45" stroke={lineStroke} strokeWidth="1" />
+        <line x1="60" y1="38" x2="60" y2="52" stroke={lineStroke} strokeWidth="1" />
+        {/* Nodes */}
+        <circle cx="45" cy="45" r="4" fill={nodeFill} />
+        <circle cx="60" cy="38" r="5" fill={nodeFill} />
+        <circle cx="78" cy="45" r="4" fill={nodeFill} />
+        <circle cx="60" cy="52" r="3.5" fill={nodeFill} />
+      </svg>
+    </div>
+  );
+}
+
+const SHAPE_COMPONENTS: Record<Category, React.ComponentType<{ isActive: boolean }>> = {
+  all: AllShape,
+  frontend: BrowserShape,
+  backend: TerminalShape,
+  mobile: PhoneShape,
+  devops: CloudShape,
+};
+
+function CategoryCard({
+  category,
+  label,
+  count,
+  isActive,
+  onClick,
+}: {
+  category: Category;
+  label: string;
+  count: number;
+  isActive: boolean;
+  onClick: () => void;
+}) {
+  const colors = CATEGORY_COLORS[category];
+  const ShapeComponent = SHAPE_COMPONENTS[category];
+
+  return (
+    <button
+      onClick={onClick}
+      className={`group flex cursor-pointer flex-col items-center gap-2 transition-all duration-200 ${
+        isActive ? "" : "opacity-75 hover:opacity-100"
+      }`}
+    >
+      <ShapeComponent isActive={isActive} />
+      <span
+        className={`text-[13px] font-semibold transition-colors duration-200 ${
+          isActive ? "text-text-dark" : "text-gray group-hover:text-text-dark"
+        }`}
+        style={isActive ? { color: colors.color } : undefined}
+      >
+        {label}
+      </span>
+      <span
+        className={`text-[11px] font-medium transition-colors duration-200 ${
+          isActive ? "text-steel-blue" : "text-gray/50"
+        }`}
+      >
+        {count} tools
+      </span>
+    </button>
+  );
+}
 
 function StackItem({
   name,
@@ -94,108 +279,6 @@ function StackItem({
   );
 }
 
-const TRANSITION_DURATION = 280;
-
-function HorizontalCircleSelector({
-  activeCategory,
-  onSelect,
-}: {
-  activeCategory: Category;
-  onSelect: (cat: Category) => void;
-}) {
-  const activeIndex = CATEGORIES.findIndex((c) => c.id === activeCategory);
-  const CIRCLE_SIZE = 200;
-  const OVERLAP = 110;
-
-  return (
-    <div className="flex flex-col gap-6">
-      {/* Category label — reads as interactive control */}
-      <span className="text-[11px] font-medium uppercase tracking-widest text-steel-blue/80">
-        Category
-      </span>
-
-      <div className="flex items-center gap-6">
-        {/* Horizontal overlapping circles */}
-        <div
-          className="relative shrink-0"
-          style={{
-            height: CIRCLE_SIZE,
-            width: CIRCLE_SIZE + (CATEGORIES.length - 1) * (CIRCLE_SIZE - OVERLAP),
-          }}
-        >
-          {CATEGORIES.map((cat, index) => {
-            const isActive = activeCategory === cat.id;
-            const distanceFromActive = Math.abs(index - activeIndex);
-            const zIndex = isActive ? 40 : Math.max(8, 35 - distanceFromActive * 6);
-            const inactiveOpacity = Math.max(0.52, 0.78 - distanceFromActive * 0.05);
-            const colors = CIRCLE_COLORS[cat.id];
-
-            return (
-              <button
-                key={cat.id}
-                onClick={() => onSelect(cat.id)}
-                className="absolute flex cursor-pointer items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-blue focus-visible:ring-offset-2"
-                style={{
-                  left: index * (CIRCLE_SIZE - OVERLAP),
-                  top: 0,
-                  width: CIRCLE_SIZE,
-                  height: CIRCLE_SIZE,
-                  zIndex,
-                  transition: `opacity ${TRANSITION_DURATION}ms cubic-bezier(0.22, 0.61, 0.36, 1)`,
-                  opacity: isActive ? 1 : inactiveOpacity,
-                }}
-                aria-pressed={isActive}
-                aria-label={`Select ${cat.label}`}
-              >
-                <div
-                  className="flex h-full w-full cursor-pointer items-center justify-center rounded-full"
-                  style={{
-                    background: colors.bg,
-                    border: `2px solid ${colors.border}`,
-                    boxShadow: isActive
-                      ? `0 0 0 4px ${colors.ring}, 0 3px 10px rgba(15, 30, 58, 0.08), 0 1px 3px rgba(15, 30, 58, 0.04)`
-                      : "0 0 0 1px rgba(91, 127, 166, 0.08)",
-                    transform: isActive ? "scale(1.02) translateY(-2px)" : "scale(1)",
-                    transition: `transform ${TRANSITION_DURATION}ms cubic-bezier(0.22, 0.61, 0.36, 1), box-shadow ${TRANSITION_DURATION}ms cubic-bezier(0.22, 0.61, 0.36, 1)`,
-                  }}
-                >
-                  <span
-                    className={`px-2 text-center text-[12px] font-semibold uppercase leading-tight tracking-wider ${
-                      colors.textLight ? "text-white" : "text-navy"
-                    }`}
-                  >
-                    {cat.label}
-                  </span>
-                </div>
-              </button>
-            );
-          })}
-        </div>
-
-        {/* Labels — integrated with cluster */}
-        <div className="flex flex-col justify-center gap-1.5 py-1">
-          {CATEGORIES.map((cat) => {
-            const isActive = activeCategory === cat.id;
-            return (
-              <button
-                key={cat.id}
-                onClick={() => onSelect(cat.id)}
-                className={`cursor-pointer text-left transition-colors duration-300 ease-out ${
-                  isActive
-                    ? "text-[13px] font-semibold text-text-dark"
-                    : "text-[13px] font-medium text-gray hover:text-text-dark"
-                }`}
-              >
-                {cat.label}
-              </button>
-            );
-          })}
-        </div>
-      </div>
-    </div>
-  );
-}
-
 export function StackSection() {
   const [activeCategory, setActiveCategory] = useState<Category>("all");
 
@@ -203,6 +286,11 @@ export function StackSection() {
     activeCategory === "all"
       ? STACK_ITEMS
       : STACK_ITEMS.filter((item) => item.category === activeCategory);
+
+  const getCategoryCount = (id: Category) =>
+    id === "all"
+      ? STACK_ITEMS.length
+      : STACK_ITEMS.filter((item) => item.category === id).length;
 
   return (
     <section className="border-y border-gray/10 bg-soft-white py-20 md:py-24">
@@ -221,48 +309,34 @@ export function StackSection() {
         </div>
 
         <div className="mt-14 lg:mt-16">
-          {/* Mobile/tablet: compact pills */}
-          <div className="flex flex-wrap justify-center gap-2 lg:hidden">
+          {/* Shape card selector */}
+          <div className="mx-auto grid max-w-4xl grid-cols-3 gap-4 sm:grid-cols-5 sm:gap-5">
             {CATEGORIES.map((cat) => (
-              <button
+              <CategoryCard
                 key={cat.id}
+                category={cat.id}
+                label={cat.label}
+                count={getCategoryCount(cat.id)}
+                isActive={activeCategory === cat.id}
                 onClick={() => setActiveCategory(cat.id)}
-                className={`rounded-full px-4 py-2.5 text-sm font-medium transition-colors duration-150 ${
-                  activeCategory === cat.id
-                    ? "bg-primary-blue text-white"
-                    : "bg-white text-gray hover:bg-white/80 hover:text-text-dark"
-                }`}
-              >
-                {cat.label}
-              </button>
+              />
             ))}
           </div>
 
-          {/* Desktop: 2-column layout — left: circle selector, right: grid */}
-          <div className="mt-10 grid gap-12 lg:mt-16 lg:grid-cols-[1fr_1fr] lg:items-center lg:gap-20">
-            {/* Left: circle selector + labels — one composed unit */}
-            <div className="hidden lg:flex lg:min-h-[240px] lg:flex-col lg:items-center lg:justify-center lg:border-r lg:border-steel-blue/12 lg:pr-16 lg:pl-2">
-              <HorizontalCircleSelector
-                activeCategory={activeCategory}
-                onSelect={setActiveCategory}
-              />
-            </div>
-
-            {/* Right: technology grid — balanced, not cramped */}
-            <div className="min-w-0 lg:pl-2">
-              <div
-                key={activeCategory}
-                className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-3 lg:gap-5"
-              >
-                {filteredItems.map((item, index) => (
-                  <StackItem
-                    key={item.name}
-                    name={item.name}
-                    iconSlug={item.iconSlug}
-                    index={index}
-                  />
-                ))}
-              </div>
+          {/* Technology grid */}
+          <div className="mx-auto mt-10 max-w-3xl lg:mt-12">
+            <div
+              key={activeCategory}
+              className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4 lg:gap-5"
+            >
+              {filteredItems.map((item, index) => (
+                <StackItem
+                  key={item.name}
+                  name={item.name}
+                  iconSlug={item.iconSlug}
+                  index={index}
+                />
+              ))}
             </div>
           </div>
         </div>
