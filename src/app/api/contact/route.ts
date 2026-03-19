@@ -17,8 +17,8 @@ export async function POST(request: Request) {
 
   try {
     const { error } = await getResend().emails.send({
-      from: "Bluecore Contact Form <contact@bluecorestudio.com>",
-      to: "dev@bluecorestudio.com",
+      from: "Bluecore Contact Form <contact@updates.bluecorestudios.com>",
+      to: "dev@bluecorestudios.com",
       replyTo: email,
       subject: `New inquiry from ${name}`,
       text: `Name: ${name}\nEmail: ${email}\n\n${description}`,
