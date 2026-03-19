@@ -7,8 +7,8 @@ import { Container } from "@/components/ui/Container";
 
 type ContactMethod = "call" | "telegram" | "email";
 
-const TELEGRAM_URL = "https://t.me/bluecore";
-const CALENDLY_URL = "#contact"; // Replace with Calendly/booking link
+const TELEGRAM_URL = "https://t.me/bluecorestudios";
+const CALENDLY_URL = "https://calendly.com/dev-bluecorestudio/30min";
 
 const contentMap: Record<
   ContactMethod,
