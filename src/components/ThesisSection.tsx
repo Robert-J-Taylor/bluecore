@@ -107,30 +107,6 @@ function WordReveal({
 }
 
 /* ------------------------------------------------------------------ */
-/*  Data                                                               */
-/* ------------------------------------------------------------------ */
-const PRINCIPLES = [
-  {
-    number: "01",
-    title: "Audit-Ready From Sprint One",
-    description:
-      "Not sprint last. Compliance is architecture, not a final sprint. If your system can't survive an audit, you don't have a product — you have a demo.",
-  },
-  {
-    number: "02",
-    title: "Enterprise Stack × Protocol Layer",
-    description:
-      "A real-time computation engine processing millions of pricing scenarios and a tokenized capital structure enforcing transfer restrictions are very different problems. The engineering discipline behind them isn't.",
-  },
-  {
-    number: "03",
-    title: "Client Work Feeds Product",
-    description:
-      "Every external build sharpens how we think about our own systems. Every vulnerability we find in production codebases makes ours harder to break. Client work and product work aren't separate — they feed each other.",
-  },
-];
-
-/* ------------------------------------------------------------------ */
 /*  ThesisSection                                                      */
 /* ------------------------------------------------------------------ */
 export function ThesisSection() {
@@ -256,48 +232,6 @@ export function ThesisSection() {
             </p>
           </BlurFade>
 
-          {/* Principle cards */}
-          <div>
-            <BlurFade delay={0.3}>
-              <h3 className="mb-12 font-display text-3xl font-bold tracking-tight text-white md:text-4xl">
-                Core Principles
-              </h3>
-            </BlurFade>
-
-            <div className="grid gap-6 md:grid-cols-3 md:gap-8">
-              {PRINCIPLES.map((principle, index) => (
-                <BlurFade key={index} delay={0.35 + index * 0.1}>
-                  <motion.div
-                    whileHover={{ y: -8, scale: 1.02 }}
-                    transition={{
-                      type: "spring",
-                      stiffness: 300,
-                      damping: 20,
-                    }}
-                    className="group relative h-full"
-                  >
-                    {/* Hover glow */}
-                    <div className="pointer-events-none absolute -inset-1 rounded-xl bg-gradient-to-br from-white/0 to-pale-blue/0 opacity-0 blur-xl transition-all duration-500 group-hover:from-white/10 group-hover:to-pale-blue/5 group-hover:opacity-100" />
-
-                    <div className="relative h-full overflow-hidden rounded-xl border border-white/10 bg-white/[0.05] p-8 backdrop-blur-md transition-all duration-300 group-hover:border-white/20">
-                      {/* Corner accent that animates in on hover */}
-                      <div className="absolute right-0 top-0 h-16 w-16 translate-x-8 translate-y-[-8px] rounded-full bg-white/[0.06] blur-2xl transition-transform duration-500 group-hover:translate-x-2 group-hover:translate-y-2" />
-
-                      <div className="mb-4 font-display text-5xl font-black text-white/10 transition-colors duration-300 group-hover:text-white/20">
-                        {principle.number}
-                      </div>
-                      <h4 className="mb-4 font-display text-xl font-bold text-white">
-                        {principle.title}
-                      </h4>
-                      <p className="font-body text-base font-light leading-relaxed text-pale-blue/70">
-                        {principle.description}
-                      </p>
-                    </div>
-                  </motion.div>
-                </BlurFade>
-              ))}
-            </div>
-          </div>
         </div>
       </Container>
     </section>

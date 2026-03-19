@@ -44,9 +44,9 @@ export function HomePageClient() {
         />
         <PartnersSection />
         <ServicesSection />
-        <ThesisSection />
         <StackSection />
         <TeamSection />
+        <ThesisSection />
         <ResearchSection />
         <CtaSection />
       </main>
