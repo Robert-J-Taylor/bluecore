@@ -166,6 +166,6 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     @apply m-0 p-0 text-text-dark;
-    background: linear-gradient(to bottom, #2563EB 0%, #2563EB 120px, #F8FAFC 120px);
+    background: linear-gradient(to bottom, #0F1E3A 0%, #0F1E3A 80px, #F8FAFC 80px);
   }
 }

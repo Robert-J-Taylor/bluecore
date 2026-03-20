@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { Button } from "@/components/ui/Button";
+import Link from "next/link";
 
 interface BluecoreHeroProps {
   colorIndex: number;
@@ -89,20 +89,28 @@ export default function BluecoreHero({
           </p>
 
           <div className="mt-10 flex items-center gap-4">
-            <Button
-              variant={isLightBg ? "primary" : "light"}
-              size="sm"
-              className="h-9 px-4 shadow-md hover:shadow-lg transition-shadow"
+            <Link
+              href="https://calendly.com/dev-bluecorestudio/30min"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`inline-flex h-9 items-center justify-center rounded-sm px-4 text-[13px] font-medium tracking-[0.02em] shadow-md transition-shadow hover:shadow-lg ${
+                isLightBg
+                  ? "bg-navy text-soft-white hover:bg-deep-navy border border-navy"
+                  : "bg-soft-white text-navy hover:bg-pale-blue border border-soft-white/30"
+              }`}
             >
               Book a Call
-            </Button>
-            <Button
-              variant={isLightBg ? "outline" : "light"}
-              size="sm"
-              className="h-9 px-4 shadow-md hover:shadow-lg transition-shadow"
+            </Link>
+            <Link
+              href="#services"
+              className={`inline-flex h-9 items-center justify-center rounded-sm px-4 text-[13px] font-medium tracking-[0.02em] shadow-md transition-shadow hover:shadow-lg ${
+                isLightBg
+                  ? "border border-gray/25 text-text-dark hover:border-steel-blue/40 hover:text-navy"
+                  : "bg-soft-white text-navy hover:bg-pale-blue border border-soft-white/30"
+              }`}
             >
               Learn More
-            </Button>
+            </Link>
           </div>
         </div>
         <div className="relative ml-auto mr-[14%] hidden shrink-0 lg:block">

@@ -1,23 +1,39 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Container } from "@/components/ui/Container";
-import { Button } from "@/components/ui/Button";
 
 interface NavbarProps {
   isLightBg?: boolean;
 }
 
 export function Navbar({ isLightBg = false }: NavbarProps) {
-  const textClass = isLightBg
+  const [scrolledPastHero, setScrolledPastHero] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolledPastHero(window.scrollY > 250);
+    };
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const useLightNavbar = isLightBg && !scrolledPastHero;
+  const useNavyNavbar = scrolledPastHero;
+  const textClass = useLightNavbar
     ? "text-text-dark hover:text-deep-navy"
     : "text-white hover:text-white";
-  const linkClass = isLightBg
+  const linkClass = useLightNavbar
     ? "text-gray hover:text-text-dark"
     : "text-white/90 hover:text-white";
-  const borderClass = isLightBg ? "border-gray/20" : "border-white/10";
+  const borderClass = useLightNavbar ? "border-b border-gray/20 border-t-white" : "border-b border-white/10";
+  const bgClass = useNavyNavbar ? "bg-navy shadow-sm border-t-navy" : useLightNavbar ? "bg-white border-t-white" : "bg-transparent border-t-transparent";
 
   return (
     <header
-      className={`sticky top-0 z-50 border-b bg-transparent transition-colors ${borderClass}`}
+      className={`sticky top-0 z-50 border-t transition-colors duration-200 ${bgClass} ${borderClass}`}
     >
       <Container>
         <nav className="flex h-[5rem] items-center justify-between">
@@ -41,14 +57,23 @@ export function Navbar({ isLightBg = false }: NavbarProps) {
               Process
             </Link>
             <Link
-              href="#contact"
+              href="/#contact"
               className={`text-[13px] font-medium tracking-[0.02em] transition-colors ${linkClass}`}
             >
               Contact
             </Link>
-            <Button variant={isLightBg ? "primary" : "light"} size="sm">
+            <Link
+              href="https://calendly.com/dev-bluecorestudio/30min"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`inline-flex h-9 items-center justify-center rounded-sm px-5 text-[13px] font-medium tracking-[0.02em] transition-colors ${
+                useLightNavbar
+                  ? "bg-navy text-soft-white hover:bg-deep-navy border border-navy"
+                  : "bg-soft-white text-navy hover:bg-pale-blue border border-soft-white/30"
+              }`}
+            >
               Book a Call
-            </Button>
+            </Link>
           </div>
         </nav>
       </Container>

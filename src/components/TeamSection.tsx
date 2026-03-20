@@ -167,7 +167,7 @@ export function TeamSection() {
               with a desire to shape the future of decentralized systems, hit us up.
             </p>
             <Link href="#contact" className="mt-8 inline-block">
-              <Button variant="primary" size="sm">
+              <Button variant="light" size="sm">
                 Join our team
               </Button>
             </Link>

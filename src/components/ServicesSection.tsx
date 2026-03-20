@@ -255,6 +255,7 @@ export function ServicesSection() {
 
   return (
     <section
+      id="services"
       className={`relative overflow-hidden border-y py-16 transition-colors duration-300 md:py-20 lg:py-24 ${
         isDarkMode
           ? "border-white/10 bg-navy"
