@@ -68,7 +68,7 @@ export function CtaSection() {
   return (
     <section
       id="contact"
-      className="relative overflow-hidden bg-deep-navy pt-16 pb-12 md:pt-20 md:pb-14 lg:pt-24 lg:pb-16"
+      className="relative overflow-hidden bg-deep-navy pt-12 pb-8 md:pt-20 md:pb-14 lg:pt-24 lg:pb-16"
     >
       {/* Abstract background shapes */}
       <div aria-hidden className="pointer-events-none absolute inset-0">
@@ -87,7 +87,7 @@ export function CtaSection() {
 
       <Container className="relative">
         <div
-          className="cta-card-animate relative overflow-hidden rounded-2xl border border-navy/10 bg-navy px-8 py-12 shadow-[0_4px_24px_rgba(15,30,58,0.12)] md:px-14 md:py-14 lg:px-20 lg:py-16"
+          className="cta-card-animate relative overflow-hidden rounded-2xl border border-navy/10 bg-navy px-6 py-8 shadow-[0_4px_24px_rgba(15,30,58,0.12)] md:px-14 md:py-14 lg:px-20 lg:py-16"
           style={{
             backgroundImage: `linear-gradient(165deg, rgb(15, 30, 58) 0%, rgb(12, 24, 46) 100%)`,
           }}
@@ -119,7 +119,7 @@ export function CtaSection() {
                   </motion.p>
                 </AnimatePresence>
                 {current.helperText && (
-                  <p className="mt-3 text-[13px] text-pale-blue/60">
+                  <p className="mt-3 hidden text-[13px] text-pale-blue/60 md:block">
                     {current.helperText}
                   </p>
                 )}
@@ -127,7 +127,7 @@ export function CtaSection() {
                 <div
                   role="tablist"
                   aria-label="Contact method"
-                  className="mt-8 flex flex-wrap gap-2"
+                  className="mt-8 flex flex-nowrap gap-2 overflow-x-auto md:flex-wrap md:overflow-visible"
                 >
                   {(
                     [
@@ -144,7 +144,7 @@ export function CtaSection() {
                         setSelectedMethod(tab.id);
                         setSubmitted(false);
                       }}
-                      className={`rounded-lg px-4 py-2.5 text-[13px] font-medium transition-colors ${
+                      className={`shrink-0 rounded-lg px-3 py-2 text-[12px] font-medium transition-colors md:px-4 md:py-2.5 md:text-[13px] ${
                         selectedMethod === tab.id
                           ? "bg-soft-white text-navy"
                           : "border border-white/15 bg-white/5 text-pale-blue/90 hover:border-white/25 hover:bg-white/10"
@@ -156,8 +156,8 @@ export function CtaSection() {
                 </div>
               </div>
 
-              {/* Tile beneath content */}
-              <div className="relative flex min-h-[180px] min-w-0 flex-col justify-center overflow-hidden rounded-xl border border-white/[0.06] bg-white/[0.02]">
+              {/* Tile beneath content — hidden on mobile */}
+              <div className="relative hidden min-h-[180px] min-w-0 flex-col justify-center overflow-hidden rounded-xl border border-white/[0.06] bg-white/[0.02] md:flex">
                 <div
                   aria-hidden
                   className="flex items-center justify-center p-6"
@@ -176,7 +176,7 @@ export function CtaSection() {
             </div>
 
             {/* ——— RIGHT SECTION ——— */}
-            <div className="min-h-[400px] border-t border-white/[0.06] pt-8 lg:border-t-0 lg:border-l lg:pt-0 lg:pl-10">
+            <div className="min-h-0 border-t border-white/[0.06] pt-6 md:min-h-[400px] md:pt-8 lg:border-t-0 lg:border-l lg:pt-0 lg:pl-10">
               <AnimatePresence mode="wait">
                 {selectedMethod === "call" && (
                   <motion.div
@@ -185,9 +185,9 @@ export function CtaSection() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -20 }}
                     transition={{ duration: 0.3 }}
-                    className="flex h-full min-h-[360px] flex-col"
+                    className="flex h-full min-h-0 md:min-h-[360px] flex-col"
                   >
-                    <div className="mb-6 flex h-12 w-12 items-center justify-center rounded-lg bg-white/[0.06]">
+                    <div className="mb-6 hidden h-12 w-12 items-center justify-center rounded-lg bg-white/[0.06] md:flex">
                       <svg className="h-5 w-5 text-pale-blue/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <rect x="3" y="4" width="18" height="18" rx="2" ry="2" strokeWidth="1.5" />
                         <path d="M16 2v4M8 2v4M3 10h18" strokeWidth="1.5" strokeLinecap="round" />
@@ -199,7 +199,7 @@ export function CtaSection() {
                     <p className="mb-4 text-[14px] leading-[1.55] text-pale-blue/80">
                       We&apos;ll assess fit, scope, and timeline.
                     </p>
-                    <div className="flex-grow border-t border-white/[0.06] pt-4">
+                    <div className="hidden flex-grow border-t border-white/[0.06] pt-4 md:block">
                       <p className="mb-3 text-[11px] font-medium uppercase tracking-wider text-pale-blue/50">
                         What to expect
                       </p>
@@ -237,9 +237,9 @@ export function CtaSection() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -20 }}
                     transition={{ duration: 0.3 }}
-                    className="flex h-full min-h-[360px] flex-col"
+                    className="flex h-full min-h-0 md:min-h-[360px] flex-col"
                   >
-                    <div className="mb-6 flex h-12 w-12 items-center justify-center rounded-lg bg-white/[0.06]">
+                    <div className="mb-6 hidden h-12 w-12 items-center justify-center rounded-lg bg-white/[0.06] md:flex">
                       <svg className="h-5 w-5 text-pale-blue/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                       </svg>
@@ -250,7 +250,7 @@ export function CtaSection() {
                     <p className="mb-4 text-[14px] leading-[1.55] text-pale-blue/80">
                       Quick questions or early ideas. For scoped work, we&apos;ll likely suggest a call.
                     </p>
-                    <div className="flex-grow border-t border-white/[0.06] pt-4">
+                    <div className="hidden flex-grow border-t border-white/[0.06] pt-4 md:block">
                       <p className="mb-3 text-[11px] font-medium uppercase tracking-wider text-pale-blue/50">
                         Best for
                       </p>
@@ -290,15 +290,15 @@ export function CtaSection() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -20 }}
                     transition={{ duration: 0.3 }}
-                    className="h-full min-h-[360px]"
+                    className="h-full min-h-0 md:min-h-[360px]"
                   >
                     {submitted ? (
                       <motion.div
                         initial={{ opacity: 0, scale: 0.95 }}
                         animate={{ opacity: 1, scale: 1 }}
-                        className="flex h-full min-h-[360px] flex-col items-center justify-center rounded-xl border border-white/[0.06] bg-white/[0.02] p-10 text-center"
+                        className="flex h-full min-h-0 md:min-h-[360px] flex-col items-center justify-center rounded-xl border border-white/[0.06] bg-white/[0.02] p-10 text-center"
                       >
-                        <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-lg bg-white/[0.06]">
+                        <div className="mb-5 hidden h-12 w-12 items-center justify-center rounded-lg bg-white/[0.06] md:flex">
                           <svg className="h-5 w-5 text-pale-blue/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                           </svg>
@@ -339,7 +339,7 @@ export function CtaSection() {
                             setSending(false);
                           }
                         }}
-                        className="flex h-full min-h-[360px] flex-col"
+                        className="flex h-full min-h-0 md:min-h-[360px] flex-col"
                       >
                         <div className="flex-grow space-y-4">
                           <div className="grid grid-cols-2 gap-3">

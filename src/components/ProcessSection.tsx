@@ -37,22 +37,22 @@ export function ProcessSection() {
           />
           <div className="relative grid gap-10 lg:grid-cols-[1fr,minmax(320px,380px)] lg:gap-14 lg:items-start">
           <div className="relative overflow-hidden rounded-lg border border-gray/10 bg-white p-6 md:p-8 shadow-sm">
-            {/* Numbered squares — bottom right of workflow card */}
+            {/* Numbered squares — bottom right of workflow card (hidden on mobile) */}
             <div
               aria-hidden
-              className="pointer-events-none absolute -right-8 -bottom-4 flex h-40 w-40 rotate-12 items-start justify-start rounded-lg bg-steel-blue p-2.5 md:-right-12 md:-bottom-6 md:h-48 md:w-48 md:p-3"
+              className="pointer-events-none absolute -right-8 -bottom-4 hidden h-40 w-40 rotate-12 items-start justify-start rounded-lg bg-steel-blue p-2.5 md:-right-12 md:-bottom-6 md:flex md:h-48 md:w-48 md:p-3"
             >
               <span className="text-[13px] font-semibold text-white/90 md:text-[15px]">1.</span>
             </div>
             <div
               aria-hidden
-              className="pointer-events-none absolute -right-4 -bottom-8 flex h-36 w-36 -rotate-6 items-start justify-start rounded-lg bg-pale-blue p-2.5 md:-right-6 md:-bottom-10 md:h-44 md:w-44 md:p-3"
+              className="pointer-events-none absolute -right-4 -bottom-8 hidden h-36 w-36 -rotate-6 items-start justify-start rounded-lg bg-pale-blue p-2.5 md:-right-6 md:-bottom-10 md:flex md:h-44 md:w-44 md:p-3"
             >
               <span className="text-[13px] font-semibold text-navy/90 md:text-[15px]">2.</span>
             </div>
             <div
               aria-hidden
-              className="pointer-events-none absolute right-4 -bottom-16 flex h-32 w-32 rotate-6 items-start justify-start rounded-lg bg-secondary-blue p-2.5 md:right-6 md:-bottom-20 md:h-40 md:w-40 md:p-3"
+              className="pointer-events-none absolute right-4 -bottom-16 hidden h-32 w-32 rotate-6 items-start justify-start rounded-lg bg-secondary-blue p-2.5 md:right-6 md:-bottom-20 md:flex md:h-40 md:w-40 md:p-3"
             >
               <span className="text-[13px] font-semibold text-white/90 md:text-[15px]">3.</span>
             </div>
